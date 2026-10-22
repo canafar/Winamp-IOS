@@ -1,0 +1,459 @@
+// !$*UTF8*$!
+{
+	"archiveVersion" = 1;
+	"classes" = {
+	};
+	"objectVersion" = 56;
+	"objects" = {
+		"867FD1C079234D90F382E3CD" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WinampClassic/AppDelegate.swift";
+			"sourceTree" = "<group>";
+		};
+		"8A4EFDA52C56847DDB6513CA" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "867FD1C079234D90F382E3CD";
+		};
+		"69CEF106746567565241581B" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WinampClassic/EnginePlayer.swift";
+			"sourceTree" = "<group>";
+		};
+		"55E9FEEEC0745A14DBBB72B8" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "69CEF106746567565241581B";
+		};
+		"33AD12F509A70D68318DE291" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WinampClassic/EqualizerDSP.swift";
+			"sourceTree" = "<group>";
+		};
+		"8AA52902F374A986CB5DF39A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "33AD12F509A70D68318DE291";
+		};
+		"7E48E282B520FAC954C22F8B" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WinampClassic/EqualizerPanel.swift";
+			"sourceTree" = "<group>";
+		};
+		"A9C3976692AE361E9E794D7D" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "7E48E282B520FAC954C22F8B";
+		};
+		"8280D1B14F40EEAB05748376" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WinampClassic/EqualizerSettings.swift";
+			"sourceTree" = "<group>";
+		};
+		"22BD9531D5965BF6F28C9C07" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "8280D1B14F40EEAB05748376";
+		};
+		"23CA7060EED01301C95EE5E7" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WinampClassic/LockScreenArtwork.swift";
+			"sourceTree" = "<group>";
+		};
+		"5012FFEEAD619537FEAB952D" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "23CA7060EED01301C95EE5E7";
+		};
+		"ADC55F6997498207B739CE54" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WinampClassic/PlaybackPresentation.swift";
+			"sourceTree" = "<group>";
+		};
+		"F46EF529022ABD7588C13504" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "ADC55F6997498207B739CE54";
+		};
+		"21E2E067DB41F815FC0F3E15" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WinampClassic/PlayerLayout.swift";
+			"sourceTree" = "<group>";
+		};
+		"828D353376114FC70F3493EF" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "21E2E067DB41F815FC0F3E15";
+		};
+		"1CB08798F52222E242874F56" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WinampClassic/PlayerStore.swift";
+			"sourceTree" = "<group>";
+		};
+		"7A141EBF8A60B0FF4183831A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "1CB08798F52222E242874F56";
+		};
+		"492BE8960E43E5EC5ED0DADD" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WinampClassic/PlayerViewController.swift";
+			"sourceTree" = "<group>";
+		};
+		"7EEF367632FB60532677C38A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "492BE8960E43E5EC5ED0DADD";
+		};
+		"99B89E7859A387A1262943D4" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WinampClassic/Skin.swift";
+			"sourceTree" = "<group>";
+		};
+		"845847BC8149E4AB8E038A03" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "99B89E7859A387A1262943D4";
+		};
+		"C859FE97336B29DFC942070C" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WinampClassic/SpectrumAnalyzer.swift";
+			"sourceTree" = "<group>";
+		};
+		"E53C7711426EA20A14930F12" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "C859FE97336B29DFC942070C";
+		};
+		"CFDDF0C8858BB63A66515D7D" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "WinampClassic/SpectrumView.swift";
+			"sourceTree" = "<group>";
+		};
+		"71453B8EF489448A44F49EDC" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "CFDDF0C8858BB63A66515D7D";
+		};
+		"15095A852E82C50AE044E04E" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "folder.assetcatalog";
+			"path" = "WinampClassic/Assets.xcassets";
+			"sourceTree" = "<group>";
+		};
+		"B25F38DAFD958585084A70BA" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "15095A852E82C50AE044E04E";
+		};
+		"FEFCDF615656B38C91668584" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/balance.png";
+			"sourceTree" = "<group>";
+		};
+		"CE7A81B1B456D071EB2647BB" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "FEFCDF615656B38C91668584";
+		};
+		"51C92CC76C60469788B40567" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/cbuttons.png";
+			"sourceTree" = "<group>";
+		};
+		"02272548E42826F5E3EC162A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "51C92CC76C60469788B40567";
+		};
+		"D23631D22E17F86F4653080D" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/eqmain.png";
+			"sourceTree" = "<group>";
+		};
+		"9E415438CDAFAE7D8BCB759A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "D23631D22E17F86F4653080D";
+		};
+		"BEFE1A9E0B10961D2A5F6F44" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "audio.mp3";
+			"path" = "WinampClassic/Resources/intro.mp3";
+			"sourceTree" = "<group>";
+		};
+		"3539FF2DCE768A58E8F29775" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "BEFE1A9E0B10961D2A5F6F44";
+		};
+		"6646560B1685F754EF22DA90" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/main.png";
+			"sourceTree" = "<group>";
+		};
+		"DE1456378A21499DFB5C9B08" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "6646560B1685F754EF22DA90";
+		};
+		"8CE5A73D9415BC3D8154406D" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/main_base.png";
+			"sourceTree" = "<group>";
+		};
+		"C851CEF7E351B7685B82ECA2" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "8CE5A73D9415BC3D8154406D";
+		};
+		"9676E8471BDC19B21429CB57" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/monoster.png";
+			"sourceTree" = "<group>";
+		};
+		"EABC28E205B4B67E66483AE6" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "9676E8471BDC19B21429CB57";
+		};
+		"D5DBAFEA3D32450CF91207C5" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/numbers.png";
+			"sourceTree" = "<group>";
+		};
+		"4DFA202052C476AA147B0B8B" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "D5DBAFEA3D32450CF91207C5";
+		};
+		"4A490F6D74B0DBC9628CDACD" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/playlist_base.png";
+			"sourceTree" = "<group>";
+		};
+		"8C8470165CFFAD7289F53AA2" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "4A490F6D74B0DBC9628CDACD";
+		};
+		"886A08F5F261434125494E0F" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/playpaus.png";
+			"sourceTree" = "<group>";
+		};
+		"6091A4356B655083F9D682DF" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "886A08F5F261434125494E0F";
+		};
+		"036A935EEC47B25C3036F42B" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/pledit.png";
+			"sourceTree" = "<group>";
+		};
+		"A5D9712DC371793BF62097BC" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "036A935EEC47B25C3036F42B";
+		};
+		"4B2F40CA0DBD6C01D3FA391C" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/posbar.png";
+			"sourceTree" = "<group>";
+		};
+		"9F88D7D391EF525D265DC369" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "4B2F40CA0DBD6C01D3FA391C";
+		};
+		"021AD2414DEE7FC12B220719" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/shufrep.png";
+			"sourceTree" = "<group>";
+		};
+		"FE832A5B9E5F687BEAE33775" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "021AD2414DEE7FC12B220719";
+		};
+		"EA55FF2701ABA0AADB12AF7D" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/text.png";
+			"sourceTree" = "<group>";
+		};
+		"8CC612E920A8BDA273BE240F" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "EA55FF2701ABA0AADB12AF7D";
+		};
+		"4E36792D2F7A16582768AB00" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/titlebar.png";
+			"sourceTree" = "<group>";
+		};
+		"B66407A1A222F3D92ED072F8" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "4E36792D2F7A16582768AB00";
+		};
+		"5A30AEBB8F54A5697BBCDD88" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "WinampClassic/Resources/volume.png";
+			"sourceTree" = "<group>";
+		};
+		"5C45D6FA12AACDC3868A419D" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "5A30AEBB8F54A5697BBCDD88";
+		};
+		"A8792157CB4F27FB949C035F" = {
+			"isa" = "PBXFileReference";
+			"explicitFileType" = "wrapper.application";
+			"includeInIndex" = 0;
+			"path" = "WinampClassic.app";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+		};
+		"0A3E27B8CA818264D75C8D81" = {
+			"isa" = "PBXGroup";
+			"children" = ("A8792157CB4F27FB949C035F");
+			"name" = "Products";
+			"sourceTree" = "<group>";
+		};
+		"878A52FC5FF6A57D50B7B870" = {
+			"isa" = "PBXGroup";
+			"children" = ("867FD1C079234D90F382E3CD", "69CEF106746567565241581B", "33AD12F509A70D68318DE291", "7E48E282B520FAC954C22F8B", "8280D1B14F40EEAB05748376", "23CA7060EED01301C95EE5E7", "ADC55F6997498207B739CE54", "21E2E067DB41F815FC0F3E15", "1CB08798F52222E242874F56", "492BE8960E43E5EC5ED0DADD", "99B89E7859A387A1262943D4", "C859FE97336B29DFC942070C", "CFDDF0C8858BB63A66515D7D");
+			"name" = "Swift";
+			"sourceTree" = "<group>";
+		};
+		"41D311A605520FC7B8B9A980" = {
+			"isa" = "PBXGroup";
+			"children" = ("15095A852E82C50AE044E04E", "FEFCDF615656B38C91668584", "51C92CC76C60469788B40567", "D23631D22E17F86F4653080D", "BEFE1A9E0B10961D2A5F6F44", "6646560B1685F754EF22DA90", "8CE5A73D9415BC3D8154406D", "9676E8471BDC19B21429CB57", "D5DBAFEA3D32450CF91207C5", "4A490F6D74B0DBC9628CDACD", "886A08F5F261434125494E0F", "036A935EEC47B25C3036F42B", "4B2F40CA0DBD6C01D3FA391C", "021AD2414DEE7FC12B220719", "EA55FF2701ABA0AADB12AF7D", "4E36792D2F7A16582768AB00", "5A30AEBB8F54A5697BBCDD88");
+			"name" = "Classic skin";
+			"sourceTree" = "<group>";
+		};
+		"AD936FCBED631FA67E05C3EA" = {
+			"isa" = "PBXGroup";
+			"children" = ("878A52FC5FF6A57D50B7B870", "41D311A605520FC7B8B9A980", "0A3E27B8CA818264D75C8D81");
+			"sourceTree" = "<group>";
+		};
+		"DE62F1BD2E122BBF6BD45B9C" = {
+			"isa" = "PBXSourcesBuildPhase";
+			"buildActionMask" = 2147483647;
+			"files" = ("8A4EFDA52C56847DDB6513CA", "55E9FEEEC0745A14DBBB72B8", "8AA52902F374A986CB5DF39A", "A9C3976692AE361E9E794D7D", "22BD9531D5965BF6F28C9C07", "5012FFEEAD619537FEAB952D", "F46EF529022ABD7588C13504", "828D353376114FC70F3493EF", "7A141EBF8A60B0FF4183831A", "7EEF367632FB60532677C38A", "845847BC8149E4AB8E038A03", "E53C7711426EA20A14930F12", "71453B8EF489448A44F49EDC");
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"CCC8ECE80271796AF54350E8" = {
+			"isa" = "PBXResourcesBuildPhase";
+			"buildActionMask" = 2147483647;
+			"files" = ("B25F38DAFD958585084A70BA", "CE7A81B1B456D071EB2647BB", "02272548E42826F5E3EC162A", "9E415438CDAFAE7D8BCB759A", "3539FF2DCE768A58E8F29775", "DE1456378A21499DFB5C9B08", "C851CEF7E351B7685B82ECA2", "EABC28E205B4B67E66483AE6", "4DFA202052C476AA147B0B8B", "8C8470165CFFAD7289F53AA2", "6091A4356B655083F9D682DF", "A5D9712DC371793BF62097BC", "9F88D7D391EF525D265DC369", "FE832A5B9E5F687BEAE33775", "8CC612E920A8BDA273BE240F", "B66407A1A222F3D92ED072F8", "5C45D6FA12AACDC3868A419D");
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"8A7588AD5FA397C62F95C6FE" = {
+			"isa" = "PBXFrameworksBuildPhase";
+			"buildActionMask" = 2147483647;
+			"files" = ();
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"2B23A31EEC75B029432F2445" = {
+			"isa" = "XCBuildConfiguration";
+			"name" = "Debug";
+			"buildSettings" = {
+				"SDKROOT" = "iphoneos";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "16.0";
+				"CLANG_ENABLE_MODULES" = "YES";
+				"SWIFT_VERSION" = "5.0";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "DEBUG";
+				"ENABLE_TESTABILITY" = "YES";
+			};
+		};
+		"EDDA600A3F771F810A8065C9" = {
+			"isa" = "XCBuildConfiguration";
+			"name" = "Debug";
+			"buildSettings" = {
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.personal.winampclassic";
+				"INFOPLIST_FILE" = "WinampClassic/Info.plist";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"TARGETED_DEVICE_FAMILY" = "1";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"SUPPORTS_MACCATALYST" = "NO";
+				"CURRENT_PROJECT_VERSION" = "5";
+				"MARKETING_VERSION" = "0.5.0";
+				"ASSETCATALOG_COMPILER_APPICON_NAME" = "AppIcon";
+				"LD_RUNPATH_SEARCH_PATHS" = ("$(inherited)", "@executable_path/Frameworks");
+			};
+		};
+		"07CA1E69F6068DEA30A4DA6B" = {
+			"isa" = "XCBuildConfiguration";
+			"name" = "Release";
+			"buildSettings" = {
+				"SDKROOT" = "iphoneos";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "16.0";
+				"CLANG_ENABLE_MODULES" = "YES";
+				"SWIFT_VERSION" = "5.0";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf-with-dsym";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "";
+				"ENABLE_TESTABILITY" = "NO";
+			};
+		};
+		"594BCDCC96599D88EF772A08" = {
+			"isa" = "XCBuildConfiguration";
+			"name" = "Release";
+			"buildSettings" = {
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.personal.winampclassic";
+				"INFOPLIST_FILE" = "WinampClassic/Info.plist";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"TARGETED_DEVICE_FAMILY" = "1";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"SUPPORTS_MACCATALYST" = "NO";
+				"CURRENT_PROJECT_VERSION" = "5";
+				"MARKETING_VERSION" = "0.5.0";
+				"ASSETCATALOG_COMPILER_APPICON_NAME" = "AppIcon";
+				"LD_RUNPATH_SEARCH_PATHS" = ("$(inherited)", "@executable_path/Frameworks");
+			};
+		};
+		"74A0CEBD3A92BD59D9E7131D" = {
+			"isa" = "XCConfigurationList";
+			"buildConfigurations" = ("2B23A31EEC75B029432F2445", "07CA1E69F6068DEA30A4DA6B");
+			"defaultConfigurationIsVisible" = 0;
+			"defaultConfigurationName" = "Release";
+		};
+		"82A58AF6F77EDCFC78A65DA6" = {
+			"isa" = "XCConfigurationList";
+			"buildConfigurations" = ("EDDA600A3F771F810A8065C9", "594BCDCC96599D88EF772A08");
+			"defaultConfigurationIsVisible" = 0;
+			"defaultConfigurationName" = "Release";
+		};
+		"34A04005BCAF206EEC990BD9" = {
+			"isa" = "PBXNativeTarget";
+			"buildConfigurationList" = "82A58AF6F77EDCFC78A65DA6";
+			"buildPhases" = ("DE62F1BD2E122BBF6BD45B9C", "8A7588AD5FA397C62F95C6FE", "CCC8ECE80271796AF54350E8");
+			"buildRules" = ();
+			"dependencies" = ();
+			"name" = "WinampClassic";
+			"productName" = "WinampClassic";
+			"productReference" = "A8792157CB4F27FB949C035F";
+			"productType" = "com.apple.product-type.application";
+		};
+		"244210E48437B6556980A702" = {
+			"isa" = "PBXProject";
+			"attributes" = {
+				"LastUpgradeCheck" = "1600";
+			};
+			"buildConfigurationList" = "74A0CEBD3A92BD59D9E7131D";
+			"compatibilityVersion" = "Xcode 14.0";
+			"developmentRegion" = "en";
+			"hasScannedForEncodings" = 0;
+			"knownRegions" = ("en", "Base", "tr");
+			"mainGroup" = "AD936FCBED631FA67E05C3EA";
+			"productRefGroup" = "0A3E27B8CA818264D75C8D81";
+			"projectDirPath" = "";
+			"projectRoot" = "";
+			"targets" = ("34A04005BCAF206EEC990BD9");
+		};
+	};
+	"rootObject" = "244210E48437B6556980A702";
+}

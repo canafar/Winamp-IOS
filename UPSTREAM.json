@@ -1,0 +1,71 @@
+{
+  "repository": "https://github.com/manfromafar/winamp",
+  "commit": "9c7f91496c56738fd707905f257643b792c05bb9",
+  "assets": [
+    {
+      "source": "Src/Winamp/resource/BALANCE.BMP",
+      "original_sha256": "6e256c9d0722eccd5c4d1ba9818bd864315cbcbde812ee7f6fca8da0424eba0c",
+      "converted": "WinampClassic/Resources/balance.png"
+    },
+    {
+      "source": "Src/Winamp/resource/CBUTTONS.BMP",
+      "original_sha256": "d1e7f7251f05e01c5c37cc80b8d9610fca14801a31ee1dfd897ef46630ced4f4",
+      "converted": "WinampClassic/Resources/cbuttons.png"
+    },
+    {
+      "source": "Src/Winamp/resource/Eqmain.bmp",
+      "original_sha256": "981fac13f6146a9d3bac8f41b25bda6d2f2df0c981ccc6bbe1407fdac5ccbe29",
+      "converted": "WinampClassic/Resources/eqmain.png"
+    },
+    {
+      "source": "Src/Winamp/resource/MAIN.BMP",
+      "original_sha256": "84d9f31d978a2c174adcda397af52dbf23699c41f83249cefacd7071151bf36d",
+      "converted": "WinampClassic/Resources/main.png"
+    },
+    {
+      "source": "Src/Winamp/resource/MONOSTER.BMP",
+      "original_sha256": "230b0e2199714ceb70cbecca9523a3769f85eca6617105fd5fa58b6bf5d4ce5e",
+      "converted": "WinampClassic/Resources/monoster.png"
+    },
+    {
+      "source": "Src/Winamp/resource/numbers.bmp",
+      "original_sha256": "e77a5216dd9347ab73f840aacd21a5daf02a54f5de9d4584d46b588e0830df91",
+      "converted": "WinampClassic/Resources/numbers.png"
+    },
+    {
+      "source": "Src/Winamp/resource/PLAYPAUS.BMP",
+      "original_sha256": "1728fa92851455f2ed8d9534d05a2b1ebb1c8449df13f7844542fd8a7a8fde75",
+      "converted": "WinampClassic/Resources/playpaus.png"
+    },
+    {
+      "source": "Src/Winamp/resource/Pledit.bmp",
+      "original_sha256": "fa6b2cef0495aea1527347a684e8282057da814457c3284f5531df88d94aca1c",
+      "converted": "WinampClassic/Resources/pledit.png"
+    },
+    {
+      "source": "Src/Winamp/resource/POSBAR.BMP",
+      "original_sha256": "151597da80ce30cd15930bd5b6fa9e8b6c11f1a64ce1bef8ca493ccec2fb2156",
+      "converted": "WinampClassic/Resources/posbar.png"
+    },
+    {
+      "source": "Src/Winamp/resource/SHUFREP.BMP",
+      "original_sha256": "3f9a7affee1d8e9cd8527f13796b207df5ce5ba822183e65e14f4a31e78412bd",
+      "converted": "WinampClassic/Resources/shufrep.png"
+    },
+    {
+      "source": "Src/Winamp/resource/text.bmp",
+      "original_sha256": "8faa57bb3a6b50b7be082511f6271e15b78c06f868af13e1d9e2be62eee2caeb",
+      "converted": "WinampClassic/Resources/text.png"
+    },
+    {
+      "source": "Src/Winamp/resource/titlebar.bmp",
+      "original_sha256": "35b08c88685e47fe12544409267b6eb8d5435e552ab8ff70461c3e1b8cb83fdb",
+      "converted": "WinampClassic/Resources/titlebar.png"
+    },
+    {
+      "source": "Src/Winamp/resource/volume.bmp",
+      "original_sha256": "4f99e507957670143b244d5fed46d7f05dd71282e0e2275dd8369e2c10f0584b",
+      "converted": "WinampClassic/Resources/volume.png"
+    }
+  ]
+}
