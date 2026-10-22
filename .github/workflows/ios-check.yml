@@ -1,0 +1,75 @@
+name: iOS build and EQ tests
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 20
+    env:
+      # Stable SDK baseline; this run does not certify iOS 27 compatibility.
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Normalize shell script line endings
+        shell: bash
+        run: perl -pi -e 's/\r$//' scripts/*.sh
+
+      - name: Record build environment
+        run: |
+          mkdir -p build
+          xcodebuild -version | tee build/environment.log
+          xcodebuild -showsdks | tee -a build/environment.log
+
+      - name: Test EQ with offline audio rendering
+        run: bash scripts/test-eq.sh
+
+      - name: Test spectrum with generated PCM signals
+        if: ${{ success() || failure() }}
+        run: bash scripts/test-spectrum.sh
+
+      - name: Test layout, balance and original EQ presets
+        if: ${{ success() || failure() }}
+        run: bash scripts/test-interface.sh
+
+      - name: Build iPhone simulator app without signing
+        id: simulator
+        if: ${{ success() || failure() }}
+        run: bash scripts/build-simulator.sh
+
+      - name: Package simulator app
+        if: ${{ success() && steps.simulator.outcome == 'success' }}
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent \
+            build/DerivedData/Build/Products/Debug-iphonesimulator/WinampClassic.app \
+            build/WinampClassic-SIMULATOR-ONLY.zip
+
+      - name: Save logs even if a test fails
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build-logs
+          path: build/*.log
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Save simulator app
+        if: ${{ success() && steps.simulator.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: WinampClassic-SIMULATOR-ONLY
+          path: build/WinampClassic-SIMULATOR-ONLY.zip
+          if-no-files-found: error
+          retention-days: 7
