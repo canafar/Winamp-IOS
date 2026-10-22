@@ -1,0 +1,74 @@
+name: Build unsigned iPhone IPA
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: unsigned-ipa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 20
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Normalize shell script line endings
+        shell: bash
+        run: perl -pi -e 's/\r$//' scripts/*.sh
+
+      - name: Test EQ and spectrum
+        run: |
+          bash scripts/test-eq.sh
+          bash scripts/test-spectrum.sh
+          bash scripts/test-interface.sh
+
+      - name: Build for a physical iPhone without signing
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          xcodebuild -version | tee build/device-environment.log
+          xcodebuild -project WinampClassic.xcodeproj \
+            -scheme WinampClassic -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' \
+            -derivedDataPath build/device \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            build 2>&1 | tee build/device-build.log
+
+      - name: Package unsigned IPA
+        run: |
+          set -euo pipefail
+          app=build/device/Build/Products/Release-iphoneos/WinampClassic.app
+          test -f "$app/WinampClassic"
+          xcrun lipo "$app/WinampClassic" -verify_arch arm64
+          mkdir -p build/ipa/Payload
+          ditto "$app" build/ipa/Payload/WinampClassic.app
+          cd build/ipa
+          ditto -c -k --keepParent Payload ../WinampClassic-unsigned.ipa
+          unzip -t ../WinampClassic-unsigned.ipa
+
+      - name: Save unsigned IPA for local signing
+        uses: actions/upload-artifact@v4
+        with:
+          name: WinampClassic-unsigned-IPA
+          path: build/WinampClassic-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Save build logs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-ipa-build-logs
+          path: build/*.log
+          if-no-files-found: warn
+          retention-days: 7
