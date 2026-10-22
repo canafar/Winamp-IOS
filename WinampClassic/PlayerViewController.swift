@@ -5,7 +5,7 @@ final class PlayerViewController: UIViewController, UIDocumentPickerDelegate, UI
     private let store = PlayerStore()
     private let canvas = UIView()
     private let spectrum = SpectrumView()
-    private var visualTicks = 0
+    private var lastScrollTime = CACurrentMediaTime()
     private lazy var equalizerPanel = EqualizerPanel(store: store)
     private var equalizerVisible = true
     private var equalizerButton: UIButton!
@@ -14,20 +14,22 @@ final class PlayerViewController: UIViewController, UIDocumentPickerDelegate, UI
         withCapInsets: UIEdgeInsets(top: 38, left: 0, bottom: 38, right: 0), resizingMode: .tile))
     private var playlistBottomButtons: [(UIButton, CGRect)] = []
     private let table = UITableView(frame: .zero, style: .plain)
-    private var timer: Timer?
+    private var timer: CADisplayLink?
+    private let footer = PlaylistFooterView()
     private var playlistVisible = true
     private var errors: [String] = []
     private var reportedStartupError = false
     private var shuffledButton: UIButton!
     private var repeatButton: UIButton!
     private var playlistButton: UIButton!
-    private let volume = SkinSlider(kind: .volume, frame: CGRect(x: 107, y: 57, width: 68, height: 13), label: "Ses")
+    private let volume = SystemVolumeView()
     private let balance = SkinSlider(kind: .balance, frame: CGRect(x: 177, y: 57, width: 38, height: 13), label: "Sol sağ denge")
     private let position = SkinSlider(kind: .position, frame: CGRect(x: 16, y: 72, width: 248, height: 10), label: "Parça konumu")
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(red: 0.12, green: 0.12, blue: 0.19, alpha: 1)
+        view.backgroundColor = .black
+        canvas.backgroundColor = .black
         view.addSubview(canvas)
         canvas.addSubview(main)
         main.store = store
@@ -73,9 +75,33 @@ final class PlayerViewController: UIViewController, UIDocumentPickerDelegate, UI
         time.accessibilityLabel = "Geçen / kalan süre"
         time.addAction(UIAction { [weak self] _ in self?.main.remaining.toggle(); self?.main.setNeedsDisplay() }, for: .touchUpInside)
         main.addSubview(time)
-        [volume, balance, position].forEach { main.addSubview($0) }
-        volume.onChange = { [weak self] in self?.store.volume = Float($0) }
-        balance.onChange = { [weak self] in self?.store.pan = Float($0 * 2 - 1) }
+        main.addSubview(volume)
+        [balance, position].forEach { main.addSubview($0) }
+        volume.levelChanged = { [weak self] value in
+            guard let self = self else { return }
+            let text = "VOLUME= \(Int((value * 100).rounded()))%"
+            if self.volume.isAdjusting { self.main.heldStatus = text }
+            self.main.showStatus(text)
+        }
+        volume.trackingChanged = { [weak self] active, value in
+            guard let self = self else { return }
+            let text = "VOLUME= \(Int((value * 100).rounded()))%"
+            self.main.heldStatus = active ? text : nil
+            self.main.showStatus(text)
+        }
+        balance.onChange = { [weak self] value in
+            guard let self = self else { return }
+            self.store.pan = Float(value * 2 - 1)
+            let text = BalanceControl.label(value)
+            if self.balance.isTracking { self.main.heldStatus = text }
+            self.main.showStatus(text)
+        }
+        balance.onTrackingChanged = { [weak self] active in
+            guard let self = self else { return }
+            let text = BalanceControl.label(self.balance.value)
+            self.main.heldStatus = active ? text : nil
+            self.main.showStatus(text)
+        }
         position.onChange = { [weak self] value in guard let self = self else { return }; self.store.seek(Double(value) * self.store.duration) }
 
         table.frame = CGRect(x: 12, y: 20, width: 243, height: 174)
@@ -88,6 +114,13 @@ final class PlayerViewController: UIViewController, UIDocumentPickerDelegate, UI
         table.indicatorStyle = .white
         table.register(UITableViewCell.self, forCellReuseIdentifier: "track")
         playlist.addSubview(table)
+        footer.store = store
+        footer.isUserInteractionEnabled = false
+        playlist.addSubview(footer)
+        addPlaylistAction(CGRect(x: 189, y: 215, width: 34, height: 10), "Geçen / kalan süre") { [weak self] in
+            self?.main.remaining.toggle()
+            self?.tick()
+        }
         addPlaylistAction(CGRect(x: 10, y: 203, width: 28, height: 20), "Müzik ekle") { [weak self] in self?.importMusic() }
         addPlaylistAction(CGRect(x: 39, y: 203, width: 28, height: 20), "Geçerli parçayı sil") { [weak self] in
             guard let self = self, let index = self.store.index else { return }; self.store.remove(at: index)
@@ -126,6 +159,7 @@ final class PlayerViewController: UIViewController, UIDocumentPickerDelegate, UI
                                   equalizer: equalizerVisible, playlist: playlistVisible)
         playlist.frame = CGRect(x: 0, y: layout.playlistY, width: 275, height: layout.playlistHeight)
         table.frame = CGRect(x: 12, y: 20, width: 243, height: layout.playlistHeight - 58)
+        footer.frame = CGRect(x: 0, y: layout.playlistHeight - 38, width: 275, height: 38)
         for (button, original) in playlistBottomButtons {
             button.frame = original.offsetBy(dx: 0, dy: layout.playlistHeight - 232)
         }
@@ -175,7 +209,6 @@ final class PlayerViewController: UIViewController, UIDocumentPickerDelegate, UI
     private func refresh() {
         equalizerPanel.refresh()
         equalizerButton.setImage(Skin.image("shufrep", CGRect(x: 0, y: equalizerVisible ? 73 : 61, width: 23, height: 12)), for: .normal)
-        if !volume.isTracking { volume.value = CGFloat(store.volume) }
         if !balance.isTracking { balance.value = CGFloat((store.pan + 1) / 2) }
         shuffledButton.setImage(Skin.image("shufrep", CGRect(x: 28, y: store.shuffle ? 30 : 0, width: 47, height: 15)), for: .normal)
         repeatButton.setImage(Skin.image("shufrep", CGRect(x: 0, y: store.repeatAll ? 30 : 0, width: 28, height: 15)), for: .normal)
@@ -187,17 +220,26 @@ final class PlayerViewController: UIViewController, UIDocumentPickerDelegate, UI
     }
 
     @objc private func startTimer() {
+        volume.refreshFromSystem()
         guard timer == nil else { return }
-        let timer = Timer(timeInterval: 1.0 / 30.0, repeats: true) { [weak self] _ in self?.tick() }
-        RunLoop.main.add(timer, forMode: .common)
+        let target = PlayerDisplayLinkTarget()
+        target.owner = self
+        let timer = CADisplayLink(target: target, selector: #selector(PlayerDisplayLinkTarget.step))
+        timer.preferredFrameRateRange = CAFrameRateRange(minimum: 60, maximum: 60, preferred: 60)
+        timer.add(to: .main, forMode: .common)
         self.timer = timer
     }
     @objc private func stopTimer() { timer?.invalidate(); timer = nil }
-    private func tick() {
+    fileprivate func tick() {
         if !position.isTracking { position.value = store.duration > 0 ? CGFloat(store.position / store.duration) : 0 }
         spectrum.update(player: store.player, playing: store.playing)
-        visualTicks += 1
-        if visualTicks % 3 == 0 { main.scrollTick += 1 }
+        let now = CACurrentMediaTime()
+        if now - lastScrollTime >= 0.1 {
+            main.scrollTick += Int((now - lastScrollTime) / 0.1)
+            lastScrollTime = now
+        }
+        footer.remaining = main.remaining
+        footer.setNeedsDisplay()
         main.setNeedsDisplay()
     }
 
@@ -250,4 +292,9 @@ final class PlayerViewController: UIViewController, UIDocumentPickerDelegate, UI
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete { store.remove(at: indexPath.row) }
     }
+}
+
+private final class PlayerDisplayLinkTarget: NSObject {
+    weak var owner: PlayerViewController?
+    @objc func step() { owner?.tick() }
 }

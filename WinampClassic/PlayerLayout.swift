@@ -28,7 +28,21 @@ enum BalanceControl {
         return (100 - right, right)
     }
     static func label(_ value: CGFloat) -> String {
-        let p = percentages(value)
-        return "BAL L\(p.left)% R\(p.right)%"
+        let pan = (snapped(value) - 0.5) * 2
+        if pan == 0 { return "BALANCE= CENTRE" }
+        return "BALANCE= \(Int((abs(pan) * 100).rounded()))% \(pan < 0 ? "LEFT" : "RIGHT")"
+    }
+}
+
+/// Temporary feedback shares the title row; it never needs a second text row.
+struct PanelStatus {
+    private var message: String?
+    private var expiresAt: TimeInterval = 0
+    mutating func show(_ text: String, at time: TimeInterval) {
+        message = text
+        expiresAt = time + 2
+    }
+    func text(at time: TimeInterval) -> String? {
+        time < expiresAt ? message : nil
     }
 }

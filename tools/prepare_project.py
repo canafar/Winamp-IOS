@@ -109,7 +109,7 @@ for name in ['Debug','Release']:
         'PRODUCT_NAME':'$(TARGET_NAME)','PRODUCT_BUNDLE_IDENTIFIER':'com.personal.winampclassic',
         'INFOPLIST_FILE':'WinampClassic/Info.plist','CODE_SIGN_STYLE':'Automatic',
         'TARGETED_DEVICE_FAMILY':'1','SUPPORTED_PLATFORMS':'iphoneos iphonesimulator',
-        'SUPPORTS_MACCATALYST':'NO','CURRENT_PROJECT_VERSION':'5','MARKETING_VERSION':'0.5.0',
+        'SUPPORTS_MACCATALYST':'NO','CURRENT_PROJECT_VERSION':'7','MARKETING_VERSION':'0.6.0',
         'ASSETCATALOG_COMPILER_APPICON_NAME':'AppIcon',
         'LD_RUNPATH_SEARCH_PATHS':['$(inherited)','@executable_path/Frameworks']})
 config_list = put('config-list',isa='XCConfigurationList',buildConfigurations=list(configs.values()),defaultConfigurationIsVisible=0,defaultConfigurationName='Release')

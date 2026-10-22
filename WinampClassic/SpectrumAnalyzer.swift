@@ -71,71 +71,90 @@ final class SpectrumCapture {
     }
 }
 
-/// Main-thread analysis. Stereo powers are combined after FFT so opposite-phase
-/// channels cannot cancel the spectrum.
+/// Port of classic_vis.cpp makeSpecData / SABuffer: 512-point Hann FFT,
+/// stereo sum, warped bins and Hermite integration. 75 source columns are
+/// grouped into the original 19 visual bars (EQ stays 10).
 final class SpectrumAnalyzer {
-    static let barCount = EqualizerSettings.frequencies.count
-    private static let log2Size: vDSP_Length = 11
-    private let size = SpectrumCapture.capacity
+    static let barCount = 19
+    private let window = (0..<512).map { Float(0.5 - 0.5 * cos(2 * Double.pi * Double($0) / 511)) }
     private let setup: FFTSetup
-    private let window: [Float]
-    private let amplitudeScale: Float
-
     init() {
-        guard let fft = vDSP_create_fftsetup(Self.log2Size, FFTRadix(kFFTRadix2)) else {
-            preconditionFailure("FFT setup could not be created")
-        }
+        guard let fft = vDSP_create_fftsetup(9, FFTRadix(kFFTRadix2)) else { fatalError("FFT setup") }
         setup = fft
-        let n = SpectrumCapture.capacity
-        window = (0..<n).map { Float(0.5 - 0.5 * cos(2 * Double.pi * Double($0) / Double(n - 1))) }
-        amplitudeScale = 2 / window.reduce(0, +)
     }
     deinit { vDSP_destroy_fftsetup(setup) }
-
     struct Frame {
-        let bands: [Float] // 0...1, -60...0 dBFS display range
-        static let silent = Frame(bands: Array(repeating: 0, count: SpectrumAnalyzer.barCount))
+        let bands: [Float]
+        let scope: [Float]
+        static let silent = Frame(bands: Array(repeating: 0, count: 19), scope: Array(repeating: 0, count: 75))
     }
-
+    // Same polynomial exp2 approximation as classic_vis.cpp fpow2.
+    static func sourcePower(_ x: Double) -> Double {
+        let y = x / 12
+        let integer = floor(y), fraction = y - integer
+        return pow(2, integer) * (0.33977 * fraction * fraction + 0.66023 * fraction + 1)
+    }
+    static func sourceBin(_ x: Double) -> Double {
+        (sourcePower(x) - 1) * (255 / sourcePower(75)) + 1
+    }
     static func edges(sampleRate: Double) -> [Double] {
-        let upper = min(20000, sampleRate / 2)
-        guard upper > 40 else { return Array(repeating: 0, count: barCount + 1) }
-        let centers = EqualizerSettings.frequencies.map { Double($0) }
-        let midpoints = (1..<barCount).map { min(upper, sqrt(centers[$0 - 1] * centers[$0])) }
-        return [40] + midpoints + [upper]
+        (0...barCount).map { sourceBin(Double(min(75, $0 * 4))) * sampleRate / 512 }
     }
-
-    private func powers(_ samples: [Float]) -> [Float] {
-        let mean = samples.reduce(0, +) / Float(size)
-        var real = (0..<size).map { (samples[$0] - mean) * window[$0] }
-        var imaginary = [Float](repeating: 0, count: size)
+    private func hermite(_ x: Float, _ a: Float, _ b: Float, _ c: Float, _ d: Float) -> Float {
+        let c1 = 0.5 * (c - a)
+        let c3 = 1.5 * (b - c) + 0.5 * (d - a)
+        let c2 = a - b + c1 - c3
+        return ((c3 * x + c2) * x + c1) * x + b
+    }
+    func analyze(_ snapshot: SpectrumCapture.Snapshot) -> Frame {
+        guard snapshot.left.count >= 576, snapshot.right.count == snapshot.left.count,
+              snapshot.sampleRate.isFinite, snapshot.sampleRate > 80 else { return .silent }
+        let offset = snapshot.left.count - 512
+        var real = (0..<512).map { i -> Float in
+            return (snapshot.left[offset+i] + snapshot.right[offset+i]) * window[i]
+        }
+        var imaginary = [Float](repeating: 0, count: 512)
         real.withUnsafeMutableBufferPointer { re in
             imaginary.withUnsafeMutableBufferPointer { im in
                 var split = DSPSplitComplex(realp: re.baseAddress!, imagp: im.baseAddress!)
-                vDSP_fft_zip(setup, &split, 1, Self.log2Size, FFTDirection(FFT_FORWARD))
+                vDSP_fft_zip(setup, &split, 1, 9, FFTDirection(FFT_FORWARD))
             }
         }
-        return (0..<(size / 2)).map {
-            (real[$0] * real[$0] + imaginary[$0] * imaginary[$0]) * amplitudeScale * amplitudeScale
+        var magnitudes = (0..<256).map { sqrt(real[$0]*real[$0] + imaginary[$0]*imaginary[$0]) * 0.5 }
+        // IPP RToPerm stores Nyquist in the imaginary slot of bin zero.
+        magnitudes[0] = sqrt(real[0]*real[0] + real[256]*real[256]) * 0.5
+        var columns = [Float]()
+        for x in 0..<75 {
+            var binF = Float(Self.sourceBin(Double(x)))
+            let next = Float(Self.sourceBin(Double(x+1)))
+            var bin = Int(floor(binF))
+            let end = min(Int(floor(next)), 255)
+            var mult = Float(bin+1) - binF
+            var interpolate = true
+            var value: Float = 0
+            repeat {
+                if bin == end { mult = next - binF; interpolate = true }
+                if interpolate {
+                    value += hermite(binF-Float(bin), magnitudes[max(0,bin-1)], magnitudes[bin],
+                        bin < 255 ? magnitudes[bin+1] : 0, bin < 254 ? magnitudes[bin+2] : 0) * mult
+                } else { value += magnitudes[bin] }
+                interpolate = false; bin += 1; binF = Float(bin)
+            } while bin <= end
+            columns.append(Float(Int(max(0, min(255, value)))))
         }
-    }
-
-    func analyze(_ snapshot: SpectrumCapture.Snapshot) -> Frame {
-        guard snapshot.left.count == size, snapshot.right.count == size,
-              snapshot.sampleRate.isFinite, snapshot.sampleRate > 80 else { return .silent }
-        let lp = powers(snapshot.left)
-        let rp = powers(snapshot.right)
-        let boundaries = Self.edges(sampleRate: snapshot.sampleRate)
-        let binHz = snapshot.sampleRate / Double(size)
-        let bands: [Float] = (0..<Self.barCount).map { bar in
-            guard boundaries[bar] < boundaries[bar + 1] else { return 0 }
-            let lower = max(1, min(size / 2 - 1, Int(ceil(boundaries[bar] / binHz))))
-            let upper = max(lower + 1, min(size / 2, Int(ceil(boundaries[bar + 1] / binHz))))
-            var power: Float = 0
-            for bin in lower..<upper { power = max(power, (lp[bin] + rp[bin]) * 0.5) }
-            let db = 10 * log10(max(power, 1e-12))
-            return max(0, min(1, (db + 60) / 60))
+        let bands: [Float] = (0..<Self.barCount).map { i in
+            let sum = (0..<4).reduce(Float(0)) { total, j in
+                let index = i * 4 + j
+                return total + (index < 75 ? columns[index] : 0)
+            }
+            return min(15, floor(sum / 4)) / 15
         }
-        return Frame(bands: bands)
+        let scope = (0..<75).map { i -> Float in
+            let index = snapshot.left.count - 576 + Int(Double(i) * 576 / 75)
+            let left = floor(max(-1, min(127.0/128, snapshot.left[index])) * 128)
+            let right = floor(max(-1, min(127.0/128, snapshot.right[index])) * 128)
+            return Float(Int((left + right) / 16)) / 8
+        }
+        return Frame(bands: bands, scope: scope)
     }
 }

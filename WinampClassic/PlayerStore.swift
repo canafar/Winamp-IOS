@@ -11,7 +11,6 @@ final class PlayerStore: NSObject {
     var failed: ((String) -> Void)?
     var shuffle = false { didSet { resetShuffle(); changed?() } }
     var repeatAll = false { didSet { changed?() } }
-    var volume: Float = 0.75 { didSet { player?.volume = volume; changed?() } }
     var pan: Float = 0 { didSet { player?.pan = pan; changed?() } }
     private(set) var eqSettings = EqualizerSettings()
     private(set) var eqAuto = false
@@ -133,7 +132,6 @@ final class PlayerStore: NSObject {
         guard tracks.indices.contains(newIndex) else { return }
         do {
             let next = try EnginePlayer(contentsOf: directory.appendingPathComponent(tracks[newIndex].filename))
-            next.volume = volume
             next.pan = pan
             if eqAuto { eqSettings = perTrackEQ[tracks[newIndex].filename] ?? EqualizerSettings() }
             next.apply(eqSettings)

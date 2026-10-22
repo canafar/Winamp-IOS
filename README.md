@@ -1,3 +1,7 @@
+Güncel sürüm: **0.6.0** — [değişiklikler, kaynaklar ve kurulum](GUNCELLEME-0.6.md).
+
+Güncel düzeltme: [0.5.1 kurulum ve kontroller](GUNCELLEME-0.5.1.md). Sağ/sol yüzde yazısı kaldırıldı.
+
 # Winamp Classic — iOS başlangıç projesi
 
 **Mac'iniz yoksa:** Windows'tan GitHub Actions ile ilk derleme için [GITHUB-KURULUM.md](GITHUB-KURULUM.md) dosyasını izleyin. Önceki sürüm kullanıcı tarafından derlenip telefonda çalıştırıldı; bu güncellemenin derlemesi bekliyor.

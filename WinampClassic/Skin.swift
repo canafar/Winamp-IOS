@@ -61,6 +61,7 @@ final class SkinSlider: UIControl {
         accessibilityValue = kind == .balance ? BalanceControl.label(value) : "\(Int(value * 100))%"
     } }
     var onChange: ((CGFloat) -> Void)?
+    var onTrackingChanged: ((Bool) -> Void)?
 
     init(kind: Kind, frame: CGRect, label: String) {
         self.kind = kind
@@ -102,10 +103,10 @@ final class SkinSlider: UIControl {
         value = (touch.location(in: self).x - thumb / 2) / travel
         onChange?(value)
     }
-    override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool { update(touch); return true }
+    override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool { onTrackingChanged?(true); update(touch); return true }
     override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool { update(touch); return true }
-    override func endTracking(_ touch: UITouch?, with event: UIEvent?) { if let touch = touch { update(touch) }; setNeedsDisplay() }
-    override func cancelTracking(with event: UIEvent?) { setNeedsDisplay() }
+    override func endTracking(_ touch: UITouch?, with event: UIEvent?) { if let touch = touch { update(touch) }; onTrackingChanged?(false); setNeedsDisplay() }
+    override func cancelTracking(with event: UIEvent?) { onTrackingChanged?(false); setNeedsDisplay() }
     override func accessibilityIncrement() { value += 0.05; onChange?(value) }
     override func accessibilityDecrement() { value -= 0.05; onChange?(value) }
     @objc private func centerBalance() { value = 0.5; onChange?(value) }
@@ -116,6 +117,14 @@ final class MainPanel: UIView {
     var playlistVisible = true
     var remaining = false
     var scrollTick = 0
+    private var status = PanelStatus()
+    var heldStatus: String?
+    private var lastTitle = ""
+
+    func showStatus(_ text: String) {
+        status.show(text, at: ProcessInfo.processInfo.systemUptime)
+        setNeedsDisplay()
+    }
 
     override func draw(_ rect: CGRect) {
         guard let store = store else { return }
@@ -132,15 +141,25 @@ final class MainPanel: UIView {
         Skin.draw("playpaus", CGRect(x: icon, y: 0, width: 9, height: 9), at: CGPoint(x: 26, y: 28))
         if store.playing { Skin.draw("playpaus", CGRect(x: 36, y: 0, width: 3, height: 9), at: CGPoint(x: 24, y: 28)) }
         var title = store.title
+        if lastTitle != title { lastTitle = title; scrollTick = 0 }
+        var textOffset: CGFloat = 0
         if title.count > 30 {
             let loop = Array(title + "   ***   ")
-            let start = (scrollTick / 3) % loop.count
-            title = String((0..<31).map { loop[(start + $0) % loop.count] })
+            let start = (scrollTick / 5) % loop.count
+            textOffset = CGFloat(scrollTick % 5)
+            title = String((0..<32).map { loop[(start + $0) % loop.count] })
         }
-        Skin.text(title, at: CGPoint(x: 111, y: 27), limit: 30)
-        Skin.text(BalanceControl.label(CGFloat((store.pan + 1) / 2)), at: CGPoint(x: 111, y: 35), limit: 30)
+        if let message = heldStatus ?? status.text(at: ProcessInfo.processInfo.systemUptime) {
+            title = message
+            textOffset = 0
+        }
+        context?.saveGState()
+        context?.clip(to: CGRect(x: 111, y: 25, width: 154, height: 9))
+        Skin.text(title, at: CGPoint(x: 111 - textOffset, y: 27), limit: 32)
+        context?.restoreGState()
         if let player = store.player {
-            let sampleRate = Int(player.format.sampleRate / 1000)
+            let sampleRate = Int(player.sourceSampleRate / 1000)
+            Skin.text(player.bitrateKbps.map { String(format: "%3d", min(999, $0)) } ?? "---", at: CGPoint(x: 111, y: 43), limit: 3)
             Skin.text(String(sampleRate), at: CGPoint(x: 156, y: 43), limit: 2)
             Skin.draw("monoster", CGRect(x: 29, y: player.numberOfChannels == 1 ? 0 : 12, width: 28, height: 12), at: CGPoint(x: 212, y: 41))
             Skin.draw("monoster", CGRect(x: 0, y: player.numberOfChannels >= 2 ? 0 : 12, width: 29, height: 12), at: CGPoint(x: 239, y: 41))

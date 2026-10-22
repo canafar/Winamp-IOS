@@ -15,3 +15,6 @@ Açık ve koyu PNG/JSON yapısı, Xcode simge ayarı ve statik önizleme kontrol
 
 ## 0.5.0
 13 uygulama Swift dosyası ve 3 test dosyası ayrıştırıldı. Xcode referansları, tüm Swift kaynaklarının build phase üyeliği, plist/YAML ve LF betikleri kontrol edildi. 18 profil kaynağın ham dizileriyle birebir karşılaştırıldı. Bağımsız yerleşim hesapları küçük ekranlar ve iPhone 13 için kontrol edildi. Xcode, UIKit, ses testleri ve yeni kilit ekranı kapağı telefonda henüz çalıştırılmadı. GUNCELLEME-0.5.md son kontrol listesidir.
+
+## 0.6.0
+GUNCELLEME-0.6.md güncel doğrulama ve cihaz kontrol listesidir. Yerel sözdizimi ve bağımsız sayısal referans kontrolleri geçti; Xcode testleri henüz çalıştırılmadı.

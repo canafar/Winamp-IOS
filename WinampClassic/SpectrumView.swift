@@ -1,6 +1,6 @@
 import UIKit
 
-/// Ten EQ frequency regions in the classic 76x16 area; tap for a connected line.
+/// Nineteen original frequency groups in the classic 76x16 area; tap for a connected line.
 final class SpectrumView: UIControl {
     // Default classic palette, bottom to top (upstream draw.cpp).
     private static let palette: [UIColor] = [
@@ -27,7 +27,7 @@ final class SpectrumView: UIControl {
         isAccessibilityElement = true
         accessibilityTraits = .button
         accessibilityLabel = "Spektrum görünümü"
-        accessibilityHint = "On bantlı dikey çubuklar ve çizgi spektrum arasında geçiş yapar"
+        accessibilityHint = "19 frekans çubuğu ve osiloskop arasında geçiş yapar"
         updateAccessibility()
         addAction(UIAction { [weak self] _ in self?.toggleMode() }, for: .touchUpInside)
     }
@@ -40,7 +40,7 @@ final class SpectrumView: UIControl {
         setNeedsDisplay()
     }
     override func accessibilityActivate() -> Bool { toggleMode(); return true }
-    private func updateAccessibility() { accessibilityValue = scopeMode ? "Çizgi spektrum" : "Frekans çubukları" }
+    private func updateAccessibility() { accessibilityValue = scopeMode ? "Osiloskop" : "Frekans çubukları" }
 
     func update(player: EnginePlayer?, playing: Bool) {
         let now = CACurrentMediaTime()
@@ -72,21 +72,24 @@ final class SpectrumView: UIControl {
         // Preserve the source skin's dotted analyzer background.
         Skin.draw("main", CGRect(x: 24, y: 43, width: 76, height: 16), at: .zero)
         if scopeMode {
-            UIColor(white: 214.0/255, alpha: 1).setStroke()
-            context.setLineWidth(1)
-            for i in envelopes.indices {
-                let point = CGPoint(x: CGFloat(i) * 75 / CGFloat(envelopes.count - 1) + 0.5,
-                                    y: CGFloat(round(15 - Double(envelopes[i].height) * 15)) + 0.5)
-                if i == 0 { context.move(to: point) } else { context.addLine(to: point) }
+            let colors: [UIColor] = [(255,255,255),(214,214,222),(181,189,189),(160,170,175),(148,156,165)].map {
+                UIColor(red: CGFloat($0.0)/255, green: CGFloat($0.1)/255, blue: CGFloat($0.2)/255, alpha: 1)
             }
-            context.strokePath()
+            var previous: Int?
+            for i in signal.scope.indices {
+                let y = max(0, min(15, 8 + Int(signal.scope[i] * 8)))
+                colors[abs(y / 2 - 4)].setFill()
+                let from = previous ?? y
+                UIRectFill(CGRect(x: i, y: min(from,y), width: 1, height: abs(y-from)+1))
+                previous = y
+            }
         } else {
             for i in envelopes.indices {
-                let left = i * 76 / envelopes.count
-                let width = (i + 1) * 76 / envelopes.count - left - 1
+                let left = i * 4
+                let width = 3
                 let height = Int((envelopes[i].height * 15).rounded())
                 for level in 0..<height {
-                    Self.palette[min(15, Int((Double(level) * 15 / 14).rounded()))].setFill()
+                    Self.palette[level].setFill()
                     UIRectFill(CGRect(x: left, y: 15 - level, width: width, height: 1))
                 }
                 if envelopes[i].peak > 0.02 {

@@ -1,0 +1,37 @@
+[
+  {
+    "file": "Src/Winamp/draw_sa.cpp",
+    "sha256": "dc348e0440a6f722b2b61df855016b4d0c0ea0652176d750e208a80f531304c3",
+    "url": "https://github.com/manfromafar/winamp/blob/master/Src/Winamp/draw_sa.cpp"
+  },
+  {
+    "file": "Src/Winamp/SA.cpp",
+    "sha256": "a65f07c363627df45e9aea0281fd7e16a52a1b06d7c1412b6896c2ece7ab7c12",
+    "url": "https://github.com/manfromafar/winamp/blob/master/Src/Winamp/SA.cpp"
+  },
+  {
+    "file": "Src/Winamp/classic_vis.cpp",
+    "sha256": "e6b4b1392fb8c8963bac4b3a0e64e0130b311b5aa50846c298951623bdfdb6ce",
+    "url": "https://github.com/manfromafar/winamp/blob/master/Src/Winamp/classic_vis.cpp"
+  },
+  {
+    "file": "Src/Winamp/SABuffer.cpp",
+    "sha256": "15a2acdfb3b0091b53b602a4b0546a363a2a61175797e9a2709516e85c369632",
+    "url": "https://github.com/manfromafar/winamp/blob/master/Src/Winamp/SABuffer.cpp"
+  },
+  {
+    "file": "Src/Winamp/config.h",
+    "sha256": "0d9bcd679e3c697df669c6091c5f2f2a6b714f990b4b4923d33962a78b52969a",
+    "url": "https://github.com/manfromafar/winamp/blob/master/Src/Winamp/config.h"
+  },
+  {
+    "file": "Src/Winamp/draw_pe.cpp",
+    "sha256": "e09f736426a2e96bcda064034972e099fb57be580c4724b2857802625c797e24",
+    "url": "https://github.com/manfromafar/winamp/blob/master/Src/Winamp/draw_pe.cpp"
+  },
+  {
+    "file": "Src/Winamp/draw_main.cpp",
+    "sha256": "9ddd479cca405368fc5949dab91fca7aa3c4a8b26b4b7052e3d504e7f0bbab48",
+    "url": "https://github.com/manfromafar/winamp/blob/master/Src/Winamp/draw_main.cpp"
+  }
+]

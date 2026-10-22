@@ -1,3 +1,5 @@
+> Bu belge 0.5.0 geçmişini anlatır. 0.5.1 sürümünde görünür denge yüzdesi kaldırılmıştır; güncel notlar GUNCELLEME-0.5.1.md içindedir.
+
 # Winamp 0.5.0 — Tam ekran, EQ profilleri, denge ve kilit ekranı
 
 ## Uygulanan istekler

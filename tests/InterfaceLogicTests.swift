@@ -5,6 +5,13 @@ enum InterfaceLogicTests {
     static func require(_ value: Bool, _ message: String) { if !value { fatalError(message) } }
     static func near(_ a: CGFloat, _ b: CGFloat) -> Bool { abs(a - b) < 0.001 }
     static func main() {
+        var status = PanelStatus()
+        require(status.text(at: 10) == nil, "Unexpected initial status")
+        status.show("VOLUME: 50%", at: 10)
+        require(status.text(at: 11.9) == "VOLUME: 50%", "Feedback disappears early")
+        status.show("VOLUME: 75%", at: 11)
+        require(status.text(at: 12.5) == "VOLUME: 75%", "New feedback failed to replace/extend")
+        require(status.text(at: 13) == nil, "Song title cannot return after feedback")
         // iPhone 13 portrait: safe top 47, bottom 34, full screen 390x844.
         let layout = PlayerLayout(width: 390, availableHeight: 763, equalizer: true, playlist: true)
         require(near(layout.scale * 275, 390), "Side gaps remain")
@@ -30,9 +37,11 @@ enum InterfaceLogicTests {
         for value: CGFloat in [0, 0.489, 0.511, 1] {
             require(BalanceControl.snapped(value) == value, "Latch failed to release")
         }
-        require(BalanceControl.label(0.5) == "BAL L50% R50%", "Center label")
-        require(BalanceControl.label(0) == "BAL L100% R0%", "Left label")
-        require(BalanceControl.label(1) == "BAL L0% R100%", "Right label")
+        require(BalanceControl.label(0.5) == "BALANCE= CENTRE", "Center label")
+        require(BalanceControl.label(0) == "BALANCE= 100% LEFT", "Left label")
+        require(BalanceControl.label(1) == "BALANCE= 100% RIGHT", "Right label")
+        require(BalanceControl.label(0.165) == "BALANCE= 67% LEFT", "Left percentage must be distance from centre")
+        require(BalanceControl.label(0.715) == "BALANCE= 43% RIGHT", "Right percentage must be distance from centre")
         let names = ["Classical", "Club", "Dance", "Flat", "Laptop speakers/headphones", "Large hall",
                      "Party", "Pop", "Reggae", "Rock", "Soft", "Ska", "Full Bass", "Soft Rock",
                      "Full Treble", "Full Bass & Treble", "Live", "Techno"]

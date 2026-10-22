@@ -1,5 +1,6 @@
 import AVFoundation
 import Foundation
+import AudioToolbox
 
 /// File -> player node -> 10-band EQ / preamp -> mixer -> device.
 /// Transport and parameter changes are confined to the main thread.
@@ -18,8 +19,9 @@ final class EnginePlayer {
     private(set) var isPlaying = false
     var didFinish: (() -> Void)?
     var configurationChanged: (() -> Void)?
-    var volume: Float = 0.75 { didSet { engine.mainMixerNode.outputVolume = max(0, min(1, volume)) } }
     var pan: Float = 0 { didSet { node.pan = max(-1, min(1, pan)) } }
+    private(set) var bitrateKbps: Int?
+    var sourceSampleRate: Double { file.fileFormat.sampleRate }
     var format: AVAudioFormat { file.processingFormat }
     var numberOfChannels: Int { Int(format.channelCount) }
     var duration: Double { Double(file.length) / format.sampleRate }
@@ -38,16 +40,19 @@ final class EnginePlayer {
               (1...2).contains(file.processingFormat.channelCount) else {
             throw NSError(domain: "WinampAudio", code: 1, userInfo: [NSLocalizedDescriptionKey: "Bu sürüm mono ve stereo ses dosyalarını destekler."])
         }
+        bitrateKbps = Self.readBitrate(url)
         engine.attach(node)
         engine.attach(equalizer)
         graphAttached = true
         engine.connect(node, to: equalizer, format: format)
         engine.connect(equalizer, to: engine.mainMixerNode, format: format)
-        engine.mainMixerNode.outputVolume = volume
+        // Device volume is controlled by MPVolumeView and hardware buttons.
+        // Keep this stage at unity to avoid applying the same attenuation twice.
+        engine.mainMixerNode.outputVolume = 1
         apply(EqualizerSettings())
         // Bounded PCM capture only; all FFT work runs on the UI side.
         let capture = visualization
-        equalizer.installTap(onBus: 0, bufferSize: 1024, format: format) { buffer, _ in
+        equalizer.installTap(onBus: 0, bufferSize: 256, format: format) { buffer, _ in
             capture.ingest(buffer)
         }
         tapInstalled = true
@@ -58,6 +63,19 @@ final class EnginePlayer {
             self.pause()
             self.configurationChanged?()
         }
+    }
+
+    static func readBitrate(_ url: URL) -> Int? {
+        var audioFile: AudioFileID?
+        if AudioFileOpenURL(url as CFURL, .readPermission, 0, &audioFile) == noErr, let audioFile = audioFile {
+            defer { AudioFileClose(audioFile) }
+            var rate: UInt32 = 0
+            var bytes = UInt32(MemoryLayout<UInt32>.size)
+            if AudioFileGetProperty(audioFile, kAudioFilePropertyBitRate, &bytes, &rate) == noErr, rate > 0 {
+                return Int((Double(rate) / 1000).rounded())
+            }
+        }
+        return nil
     }
 
     deinit {

@@ -50,6 +50,11 @@ enum EQOfflineTests {
     }
 
     static func main() throws {
+        let introURL = URL(fileURLWithPath: "WinampClassic/Resources/intro.mp3")
+        require(EnginePlayer.readBitrate(introURL) == 64, "MP3 bitrate must come from compressed file metadata")
+        let intro = try AVAudioFile(forReading: introURL)
+        require(intro.fileFormat.sampleRate == 22050, "MP3 sample rate metadata")
+
         var malformed = EqualizerSettings(preamp: .infinity, gains: [20, -30, .nan])
         malformed = malformed.sanitized()
         require(malformed.gains.count == 10 && malformed.gains[0] == 12 && malformed.gains[1] == -12 && malformed.gains[2] == 0 && malformed.preamp == 0, "Settings validation failed")
